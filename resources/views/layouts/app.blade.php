@@ -53,7 +53,9 @@
                     </div>
                     <div class="container">
                             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll justify-evenly" style="--bs-scroll-height: 100px;">
-                                <router-link to="/Cart" class="nav-link active mr-5"> <img src="shopping_bag.svg" class="mr-5" alt=""> </router-link>
+                                <router-link to="/Cart" class="nav-link active mr-5"> <img src="shopping_bag.svg" class="mr-5" alt="">
+                                    <span v-text="this.$store.state.cart.produits.length" class="rounded-full px-1 ml-3 bg-black text-white rounded"></span> 
+                                </router-link>
                                 <ul class="navbar-nav ml-auto">
                                     <!-- Authentication Links -->
                                     @guest

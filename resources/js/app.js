@@ -19,11 +19,30 @@ import VueRouter from "vue-router";
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+import Vuex from 'vuex';
+Vue.use(Vuex);
 
 
 Vue.use(VueRouter)
 Vue.component('home', require('./components/home.vue').default);
 // Vue.component('orders', require('./components/Orders.vue'));
+
+import Swal from 'sweetalert2';
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+});
+
+window.Swal = Swal;
+window.Toast = Toast;
 
 
 import Accueil from "./components/1.vue";
@@ -84,9 +103,6 @@ const routes =  [
     {
         path: '/cart', component: Cart, name: 'Cart'
     },
-    // {
-    //     path: '/cart', component: Cart, name: 'Cart'
-    // },
 ]
 
 
@@ -98,7 +114,85 @@ const routes =  [
 const router = new VueRouter({
     routes
 })
+
+
+
+const store = new Vuex.Store({
+    state: {
+        cart: {
+            nom_client:null,
+            adresse:null,
+            phone:null,
+            produits:[]
+        },
+    },
+
+    mutations: {
+        setProducts(state, products) {
+            state.products = products;
+        },
+
+        addProductToCart(state, product) {
+            state.cart.produits.push({
+                id: product.id,
+                nom: product.nom,
+                prix: product.prix,
+                path: product.path,
+                quantite: product.quantite,
+                description: product.description
+            });
+        },
+
+        removeProductToCart(state, index) {
+            state.cart.produits.splice(index, 1);
+            Fire.$emit('Modified');
+            Toast.fire({
+                icon: 'success',
+                title: 'Produit spprimer de la panier'
+            });
+        },
+        setNom(state, nom_client){
+            state.cart.nom_client = nom_client
+            Fire.$emit('Modified');
+        },
+        setAdresse(state, adresse){
+            state.cart.adresse = adresse
+            Fire.$emit('Modified');
+        },
+        setPhone(state, phone){
+            state.cart.phone = phone
+            Fire.$emit('Modified');
+        },
+        Posting(state) {
+            axios.post('api/panier', state.cart)
+            .then(() => {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Commande lancer avec succes'
+                });
+            }).catch((e) => {
+                console.log(e);
+            })
+        }
+    },
+
+    actions: {
+        ValidateCart() {
+            axios.post('api/panier', this.$store.state.cart)
+            .then(() => {
+                console.log('Success');
+            }).catch((e) => {
+                console.log(e);
+            })
+        },
+    },
+
+});
+
+window.Fire = new Vue()
+
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    store,
 });

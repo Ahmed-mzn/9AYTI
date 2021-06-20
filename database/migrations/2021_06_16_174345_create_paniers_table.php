@@ -15,7 +15,13 @@ class CreatePaniersTable extends Migration
     {
         Schema::create('paniers', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
+            $table->string('nom_client')->nullable();
+            $table->string('adresse');
+            $table->string('phone');
+            $table->string('statut');
+            $table->double('montant');
+            $table->boolean('payer')->default(false);
             $table->timestamps();
         });
     }
