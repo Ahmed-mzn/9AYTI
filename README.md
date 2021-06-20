@@ -5,7 +5,7 @@
 ## Installation
 
 
-* Clonez ou récupérer le dépôt. ` git clone https://github.com/Hujjat/laravStart.git `
+* Clonez ou récupérer le dépôt. ` https://github.com/Ahmed-mzn/9AYTI.git `
 * `cd ` to project folder. 
 * Run ` composer install `
 * Save as the `.env.example` to `.env` and set your database information 
